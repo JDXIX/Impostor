@@ -1,0 +1,283 @@
+:root {
+    --color-fondo: #0f172a;
+    --color-primario: #6366f1; /* Indigo */
+    --color-acento: #ec4899; /* Pink */
+    --color-texto: #f8fafc;
+    --color-tarjeta: rgba(30, 41, 59, 0.7);
+    --borde-suave: 1px solid rgba(255, 255, 255, 0.1);
+    --sombra-neon: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Outfit', sans-serif;
+}
+
+body {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 20%);
+    overflow: hidden;
+}
+
+/* Contenedor Principal (Móvil) */
+.contenedor-app {
+    width: 100%;
+    max-width: 450px;
+    height: 100vh;
+    padding: 2rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Pantallas */
+.pantalla {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    animation: aparecer 0.5s ease-out;
+    width: 100%;
+}
+
+.pantalla.activa {
+    display: flex;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tipografía */
+h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-align: center;
+    background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 10px rgba(255,255,255,0.1);
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: var(--color-texto);
+    text-align: center;
+}
+
+p {
+    color: #94a3b8;
+    text-align: center;
+    line-height: 1.6;
+}
+
+/* Inputs y Selects */
+.grupo-input {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+label {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    font-weight: 600;
+}
+
+input, select {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(15, 23, 42, 0.6);
+    border: var(--borde-suave);
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+}
+
+/* Botones */
+.btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-primario {
+    background: linear-gradient(135deg, var(--color-primario), var(--color-acento));
+    color: white;
+    box-shadow: var(--sombra-neon);
+}
+
+.btn-primario:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 25px rgba(99, 102, 241, 0.5);
+}
+
+.btn-secundario {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.btn-secundario:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Tarjetas (Role Reveal) */
+.tarjeta-rol {
+    background: var(--color-tarjeta);
+    backdrop-filter: blur(10px);
+    border: var(--borde-suave);
+    padding: 3rem 2rem;
+    border-radius: 24px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    perspective: 1000px;
+    min-height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contenido-tarjeta {
+    width: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.tarjeta-rol.revelada .contenido-tarjeta {
+    transform: rotateY(180deg);
+}
+
+.cara-frontal, .cara-trasera {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 50%; /* Center vertically effectively */
+    left: 0;
+    transform: translateY(-50%); /* Adjust for absolute centering context if needed, though flex container handles parent */
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Reset position for absolute children inside flex parent logic above was slightly mix match.
+   Let's simplify: .contenido-tarjeta needs height.
+*/
+.tarjeta-rol {
+    display: block; /* Reset back to block for Flip logic simplicity */
+}
+
+.contenido-tarjeta {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 250px;
+}
+
+.cara-frontal, .cara-trasera {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 20px;
+}
+
+.cara-trasera {
+    transform: rotateY(180deg);
+    background: rgba(0,0,0,0.3); /* Slightly darker */
+}
+
+.emoji-gigante {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    animation: flotar 3s infinite ease-in-out;
+}
+
+@keyframes flotar {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.palabra-secreta {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-acento);
+    text-transform: uppercase;
+}
+
+.rol-texto {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primario);
+}
+
+/* Utilidades */
+.oculto {
+    display: none !important;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #ddd, #fff);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0 auto;
+    border: 3px solid var(--color-primario);
+}
+
+.jugador-pill {
+    background: rgba(255,255,255,0.05);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    margin: 0.2rem;
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.alerta-impostor {
+    color: #ef4444 !important; /* Red */
+}

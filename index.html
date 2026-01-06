@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Impostor - El Embustero</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="contenedor-app">
+
+        <!-- PANTALLA 1: INICIO -->
+        <div id="pantalla-inicio" class="pantalla activa">
+            <h1>🕵️ El Impostor</h1>
+            <p>Descubre quién miente entre tus panas.</p>
+
+            <div class="grupo-input">
+                <label>¿Cuántos juegan?</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="btn btn-secundario" style="width: 50px;" onclick="ajustarJugadores(-1)">-</button>
+                    <input type="number" id="num-jugadores" value="4" min="3" max="15" readonly
+                        style="text-align: center;">
+                    <button class="btn btn-secundario" style="width: 50px;" onclick="ajustarJugadores(1)">+</button>
+                </div>
+            </div>
+
+            <div class="grupo-input">
+                <label>Categoría</label>
+                <select id="select-categoria">
+                    <!-- Se llena con JS -->
+                </select>
+            </div>
+
+            <div class="grupo-input">
+                <label>Número de Impostores</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="btn btn-secundario" style="width: 50px;" onclick="ajustarImpostores(-1)">-</button>
+                    <input type="number" id="num-impostores" value="1" min="1" max="3" readonly
+                        style="text-align: center;">
+                    <button class="btn btn-secundario" style="width: 50px;" onclick="ajustarImpostores(1)">+</button>
+                </div>
+            </div>
+
+            <div class="grupo-input"
+                style="flex-direction: row; align-items: center; justify-content: space-between; background: rgba(15, 23, 42, 0.6); padding: 1rem; border-radius: 12px; border: var(--borde-suave);">
+                <label style="margin: 0; cursor: pointer;" for="check-pistas">¿Pista para Impostores?</label>
+                <input type="checkbox" id="check-pistas"
+                    style="width: 20px; height: 20px; accent-color: var(--color-primario);">
+            </div>
+
+            <button class="btn btn-primario" onclick="iniciarConfiguracion()">¡De una!</button>
+        </div>
+
+        <!-- PANTALLA 2: NOMBRES (Opcional, simplificado a números si se prefiere, pero nombres es mejor) -->
+        <div id="pantalla-nombres" class="pantalla">
+            <h2>¿Quiénes juegan?</h2>
+            <div id="lista-inputs-nombres"
+                style="width: 100%; display: flex; flex-direction: column; gap: 10px; max-height: 50vh; overflow-y: auto;">
+                <!-- Inputs generados dinámicamente -->
+            </div>
+            <button class="btn btn-primario" onclick="confirmarNombres()">¡Listos!</button>
+        </div>
+
+        <!-- PANTALLA 3: PASE EL CELULAR -->
+        <div id="pantalla-pase" class="pantalla">
+            <div class="avatar" id="avatar-pase">?</div>
+            <h2>Dale el cel a:</h2>
+            <h1 id="nombre-jugador-pase">Jugador 1</h1>
+            <p>Que nadie más vea la pantalla, ¡pilas!</p>
+            <button class="btn btn-primario" onclick="mostrarRol()">Ver mi rol 🔒</button>
+        </div>
+
+        <!-- PANTALLA 4: REVELACIÓN DE ROL -->
+        <div id="pantalla-rol" class="pantalla">
+            <div class="tarjeta-rol" id="tarjeta-rol" onclick="toggleTarjeta()">
+                <div class="contenido-tarjeta">
+                    <!-- FRENTE -->
+                    <div class="cara-frontal">
+                        <div class="emoji-gigante">👆</div>
+                        <h2>Toca para revelar</h2>
+                    </div>
+                    <!-- ATRÁS -->
+                    <div class="cara-trasera">
+                        <div class="emoji-gigante" id="icono-rol">🤫</div>
+                        <h2 id="titulo-rol">TÚ ERES...</h2>
+                        <div class="palabra-secreta" id="texto-secreta">****</div>
+                        <p id="instruccion-rol">Memorízalo y toca para ocultar</p>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-secundario" id="btn-siguiente-rol" onclick="siguienteJugador()">¡Ya caché!</button>
+        </div>
+
+        <!-- PANTALLA 5: JUEGO EN CURSO -->
+        <div id="pantalla-juego" class="pantalla">
+            <h1>¡A jugar! 🗣️</h1>
+            <div class="emoji-gigante">🎭</div>
+            <p>Turnense para decir una palabra relacionada con:</p>
+            <h2 id="categoria-juego" style="color:var(--color-primario);">Categoría</h2>
+
+            <div
+                style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; width: 100%; margin: 1rem 0;">
+                <p style="font-size: 0.8rem; margin-bottom: 0.5rem;">ORDEN DE JUEGO SUGERIDO:</p>
+                <div id="lista-orden-juego" style="display: flex; flex-wrap: wrap; justify-content: center;"></div>
+            </div>
+
+            <button class="btn btn-primario" onclick="revelarResultados()">¡Ya votamos!</button>
+        </div>
+
+        <!-- PANTALLA 6: RESULTADOS -->
+        <div id="pantalla-resultados" class="pantalla">
+            <h1>La Verdad 😱</h1>
+
+            <div class="tarjeta-rol" style="min-height: 200px; cursor: default;">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                    <p>El Impostor era:</p>
+                    <h1 id="nombre-impostor" class="alerta-impostor">NADIE</h1>
+                    <p>La palabra era:</p>
+                    <h2 id="palabra-final" style="color: var(--color-primario);">NADA</h2>
+                </div>
+            </div>
+
+            <button class="btn btn-primario" onclick="reiniciarJuego()">Jugar otra vez 🔁</button>
+        </div>
+
+    </div>
+
+    <script src="palabras.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
